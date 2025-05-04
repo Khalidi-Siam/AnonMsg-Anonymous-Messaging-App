@@ -43,8 +43,7 @@ def register(request):
         user = User.objects.create_user(username=username, email=email, password=password)
         user = authenticate(request, username=username, password=password)
         if user:
-            auth_login(request, user)
-            return redirect('inbox')
+            return redirect('login')
         return render(request, 'register.html', {
             'error': 'Registration failed'
         })
