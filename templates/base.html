@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Anonymous Messaging{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('https://images.unsplash.com/photo-1619252584172-a83e06cb8c95?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark body {
+            background: linear-gradient(rgba(31,41,55,0.85), rgba(31,41,55,0.85)), url('https://images.unsplash.com/photo-1619252584172-a83e06cb8c95?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass {
+            background: rgba(55, 65, 81, 0.95); /* Increased opacity for better contrast */
+            backdrop-filter: blur(4px); /* Reduced blur for clearer text */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .spinner {
+            display: none;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #4f46e5;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-gray-800 dark:text-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="glass shadow-lg sticky top-0 z-10">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-indigo-600 dark:text-indigo-300">AnonMsg</a>
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'inbox' %}" class="text-gray-600 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-300 transition">Inbox</a>
+                    <a href="{% url 'send_message' %}" class="text-gray-600 dark:text-gray- DAYS200 hover:text-indigo-600 dark:hover:text-indigo-300 transition">Send</a>
+                    <a href="{% url 'logout' %}" class="text-gray-600 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-300 transition">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-gray-600 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-300 transition">Login</a>
+                    <a href="{% url 'register' %}" class="text-gray-600 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-300 transition">Register</a>
+                {% endif %}
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500 transition">
+                    <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="fade-in">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass shadow-inner mt-12 py-6">
+        <div class="max-w-6xl mx-auto px-4 text-center text-gray-600 dark:text-gray-300">
+            © 2025 AnonMsg. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Dark mode toggle
+        const toggleButton = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        }
+
+        toggleButton.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                localStorage.setItem('theme', 'light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        });
+
+        // Form submission loading state
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', (e) => {
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    const spinner = submitButton.querySelector('.spinner');
+                    if (spinner) {
+                        submitButton.disabled = true;
+                        spinner.style.display = 'inline-block';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

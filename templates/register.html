@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="glass shadow-2xl rounded-xl p-8 max-w-md mx-auto">
+    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-6 text-center">Create Your Account</h2>
+    <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        <div class="relative">
+            <input type="text" name="username" id="username" class="peer w-full p-3 pt-6 border border-gray-300 dark:border-gray-500 rounded-lg bg-transparent focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition duration-200 text-gray-900 dark:text-gray-100" placeholder=" " required>
+            <label for="username" class="absolute left-3 top-1 text-sm text-gray-500 dark:text-gray-300 transition-all duration-200 transform peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm">Username</label>
+        </div>
+        <div class="relative">
+            <input type="email" name="email" id="email" class="peer w-full p-3 pt-6 border border-gray-300 dark:border-gray-500 rounded-lg bg-transparent focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition duration-200 text-gray-900 dark:text-gray-100" placeholder=" " required>
+            <label for="email" class="absolute left-3 top-1 text-sm text-gray-500 dark:text-gray-300 transition-all duration-200 transform peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm">Email</label>
+        </div>
+        <div class="relative">
+            <input type="password" name="password" id="password" class="peer w-full p-3 pt-6 border border-gray-300 dark:border-gray-500 rounded-lg bg-transparent focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition duration-200 text-gray-900 dark:text-gray-100" placeholder=" " required>
+            <label for="password" class="absolute left-3 top-1 text-sm text-gray-500 dark:text-gray-300 transition-all duration-200 transform peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm">Password</label>
+        </div>
+        <div class="relative">
+            <input type="password" name="confirm_password" id="confirm_password" class="peer w-full p-3 pt-6 border border-gray-300 dark:border-gray-500 rounded-lg bg-transparent focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition duration-200 text-gray-900 dark:text-gray-100" placeholder=" " required>
+            <label for="confirm_password" class="absolute left-3 top-1 text-sm text-gray-500 dark:text-gray-300 transition-all duration-200 transform peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm">Confirm Password</label>
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-200 transform hover:scale-105 flex items-center justify-center">
+            <span>Register</span>
+            <span class="spinner ml-2"></span>
+        </button>
+    </form>
+    {% if error %}
+        <p class="mt-4 text-center text-sm text-red-600 dark:text-red-300 bg-red-100 dark:bg-red-900/30 p-2 rounded-lg">{{ error }}</p>
+    {% endif %}
+    <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
+        Already have an account? <a href="{% url 'login' %}" class="text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-200 font-medium">Login</a>
+    </p>
+</div>
+{% endblock %}
