@@ -70,3 +70,16 @@ def login(request):
 def logout(request):
     auth_logout(request)
     return redirect('login')
+
+
+
+@login_required
+def profile(request):
+    try:
+        email = request.user.get_email()
+    except ValueError as e:
+        email = "Unable to decrypt email"
+    return render(request, 'profile.html', {
+        'username': request.user.username,
+        'email': email
+    })
