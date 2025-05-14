@@ -1,36 +1,144 @@
 {% extends 'base.html' %}
 {% block title %}Register{% endblock %}
 {% block content %}
-<div class="glass shadow-2xl rounded-xl p-8 max-w-md mx-auto">
-    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-6 text-center">Create Your Account</h2>
-    <form method="POST" class="space-y-6">
-        {% csrf_token %}
-        <div class="relative">
-            <input type="text" name="username" id="username" class="peer w-full p-3 pt-6 border border-gray-300 dark:border-gray-500 rounded-lg bg-transparent focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition duration-200 text-gray-900 dark:text-gray-100" placeholder=" " required>
-            <label for="username" class="absolute left-3 top-1 text-sm text-gray-500 dark:text-gray-300 transition-all duration-200 transform peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm">Username</label>
+<div class="glass shadow-2xl rounded-xl overflow-hidden max-w-md mx-auto">
+    <!-- Header Area -->
+    <div class="bg-gradient-to-r from-indigo-500/90 to-purple-600/90 dark:from-indigo-800 dark:to-purple-900 px-8 py-6 text-center">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/20 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+            </svg>
         </div>
-        <div class="relative">
-            <input type="email" name="email" id="email" class="peer w-full p-3 pt-6 border border-gray-300 dark:border-gray-500 rounded-lg bg-transparent focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition duration-200 text-gray-900 dark:text-gray-100" placeholder=" " required>
-            <label for="email" class="absolute left-3 top-1 text-sm text-gray-500 dark:text-gray-300 transition-all duration-200 transform peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm">Email</label>
+        <h2 class="text-2xl font-bold text-white">Create Your Account</h2>
+        <p class="text-indigo-200/90 text-sm mt-1">Join the anonymous messaging platform</p>
+    </div>
+    
+    <!-- Form Content -->
+    <div class="p-8">
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="space-y-5">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1">Username</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input type="text" name="username" id="username" class="block w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-700/80 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent" placeholder="Choose your username" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1">Email</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                            </svg>
+                        </div>
+                        <input type="email" name="email" id="email" class="block w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-700/80 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent" placeholder="Enter your email" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input type="password" name="password" id="password" class="block w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-700/80 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent" placeholder="Create a password" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="confirm_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1">Confirm Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input type="password" name="confirm_password" id="confirm_password" class="block w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-700/80 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent" placeholder="Confirm your password" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Error Message -->
+            {% if error %}
+                <div class="bg-red-100/90 dark:bg-red-900/70 border-l-4 border-red-500 text-red-700 dark:text-red-400 p-4 rounded-lg flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <p>{{ error }}</p>
+                </div>
+            {% endif %}
+            
+            <button type="submit" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 shadow-md shadow-indigo-500/20 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                </svg>
+                Create Account
+                <span class="spinner ml-2"></span>
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center">
+            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">
+                    Sign in here
+                </a>
+            </p>
         </div>
-        <div class="relative">
-            <input type="password" name="password" id="password" class="peer w-full p-3 pt-6 border border-gray-300 dark:border-gray-500 rounded-lg bg-transparent focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition duration-200 text-gray-900 dark:text-gray-100" placeholder=" " required>
-            <label for="password" class="absolute left-3 top-1 text-sm text-gray-500 dark:text-gray-300 transition-all duration-200 transform peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm">Password</label>
+        
+        <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div class="bg-indigo-50/70 dark:bg-indigo-900/30 rounded-lg p-4 text-sm text-gray-700 dark:text-gray-300">
+                <h3 class="font-medium text-indigo-700 dark:text-indigo-400 mb-2">Privacy Notice:</h3>
+                <p>All messages are end-to-end encrypted for maximum security and privacy.</p>
+            </div>
         </div>
-        <div class="relative">
-            <input type="password" name="confirm_password" id="confirm_password" class="peer w-full p-3 pt-6 border border-gray-300 dark:border-gray-500 rounded-lg bg-transparent focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition duration-200 text-gray-900 dark:text-gray-100" placeholder=" " required>
-            <label for="confirm_password" class="absolute left-3 top-1 text-sm text-gray-500 dark:text-gray-300 transition-all duration-200 transform peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm">Confirm Password</label>
-        </div>
-        <button type="submit" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-200 transform hover:scale-105 flex items-center justify-center">
-            <span>Register</span>
-            <span class="spinner ml-2"></span>
-        </button>
-    </form>
-    {% if error %}
-        <p class="mt-4 text-center text-sm text-red-600 dark:text-red-300 bg-red-100 dark:bg-red-900/30 p-2 rounded-lg">{{ error }}</p>
-    {% endif %}
-    <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
-        Already have an account? <a href="{% url 'login' %}" class="text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-200 font-medium">Login</a>
-    </p>
+    </div>
 </div>
+
+<script>
+    // Show spinner on form submit
+    const form = document.querySelector('form');
+    const spinner = document.querySelector('.spinner');
+    
+    if (form && spinner) {
+        form.addEventListener('submit', function() {
+            spinner.style.display = 'inline-block';
+            // Disable submit button
+            this.querySelector('button[type="submit"]').disabled = true;
+        });
+    }
+    
+    // Password confirmation validation
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    
+    if (password && confirmPassword) {
+        confirmPassword.addEventListener('input', function() {
+            if (this.value !== password.value) {
+                this.setCustomValidity("Passwords don't match");
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        password.addEventListener('input', function() {
+            if (confirmPassword.value !== '' && confirmPassword.value !== this.value) {
+                confirmPassword.setCustomValidity("Passwords don't match");
+            } else {
+                confirmPassword.setCustomValidity('');
+            }
+        });
+    }
+</script>
 {% endblock %}

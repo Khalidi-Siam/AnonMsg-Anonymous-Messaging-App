@@ -15,4 +15,8 @@ class Message(models.Model):
         self.nonce = nonce
 
     def decrypt_content(self) -> str:
-        return aes_decrypt(self.encrypted_content, self.nonce)
+        decrypted = aes_decrypt(self.encrypted_content, self.nonce)
+        # Make sure we always return a string, not bytes
+        if isinstance(decrypted, bytes):
+            return decrypted.decode('utf-8')
+        return decrypted
