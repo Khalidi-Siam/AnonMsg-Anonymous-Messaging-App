@@ -62,14 +62,16 @@
         </div>
         
         <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white/30 dark:bg-gray-800/30">
-            <a href="{% url 'send_message' %}" class="flex items-center justify-center w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md shadow-indigo-500/20">
+            <button id="open-new-message-modal" type="button" class="flex items-center justify-center w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md shadow-indigo-500/20">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                 </svg>
                 New Message
-            </a>
+            </button>
         </div>
-    </div>    <!-- Chatbox -->
+    </div>
+    
+    <!-- Chatbox -->
     <div class="glass shadow-2xl rounded-xl w-full md:w-2/3 flex flex-col h-full overflow-hidden">
         {% if selected_sender %}
             <!-- Chat Header -->
@@ -168,13 +170,12 @@
                     </div>
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Welcome to AnonMsg</h2>
                     <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">Select a conversation from the sidebar or start a new message to begin chatting securely with end-to-end encryption.</p>
-                    
-                    <a href="{% url 'send_message' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl transition-all duration-200 font-medium shadow-md shadow-indigo-500/20">
+                      <button type="button" id="welcome-new-message-btn" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl transition-all duration-200 font-medium shadow-md shadow-indigo-500/20">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                         </svg>
                         Start a New Message
-                    </a>
+                    </button>
                 </div>
             </div>
         {% endif %}
@@ -204,6 +205,82 @@
     </div>
 </div>
 
+<!-- New Message Modal -->
+<div id="new-message-modal" class="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm hidden animate-fade-in">
+    <div class="glass shadow-2xl rounded-xl overflow-hidden max-w-md w-full mx-4 animate-slide-up">
+        <!-- Modal Header -->
+        <div class="bg-gradient-to-r from-indigo-500/90 to-purple-600/90 dark:from-indigo-800 dark:to-purple-900 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold text-white">New Message</h2>
+            </div>
+            <button id="close-new-message-modal" class="text-white/80 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Modal Content -->
+        <div class="p-6">
+            <form id="new-message-form" class="space-y-5">
+                {% csrf_token %}
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="modal-receiver" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1">To:</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="text" name="receiver" id="modal-receiver" class="block w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-700/80 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent" placeholder="Username to send to" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="modal-message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1">Message:</label>
+                        <div class="relative">
+                            <textarea name="message" id="modal-message" class="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-700/80 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent resize-none" rows="5" placeholder="Type your message here..." required></textarea>
+                            <div class="absolute right-3 bottom-3 text-gray-400 dark:text-gray-500 text-xs">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v-2h2L9 12l.757-.757A6 6 0 1118 8zm-6-4a1 1 0 100 2h4a1 1 0 100-2h-4z" clip-rule="evenodd" />
+                                </svg>
+                                Encrypted
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="modal-error-message" class="hidden bg-red-100/90 dark:bg-red-900/70 border-l-4 border-red-500 text-red-700 dark:text-red-400 p-3 rounded-lg flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <p id="modal-error-text"></p>
+                </div>
+                
+                <div class="flex items-center space-x-3 pt-2">
+                    <button type="button" id="cancel-new-message" class="flex-1 px-4 py-2.5 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-all duration-200 font-medium text-center">
+                        Cancel
+                    </button>
+                    <button type="submit" id="send-new-message" class="flex-1 flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-lg transition-all duration-200 shadow-md font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                        </svg>
+                        Send
+                        <span class="spinner ml-2"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <style>
     .custom-scrollbar::-webkit-scrollbar {
         width: 6px;
@@ -229,6 +306,15 @@
     
     #chatbox > div {
         animation: fadeIn 0.3s ease-out forwards;
+    }
+    
+    .animate-slide-up {
+        animation: slideUp 0.3s ease-out forwards;
+    }
+    
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 
@@ -272,6 +358,95 @@
             textarea.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+        
+        // --- New Message Modal Logic ---
+        const modal = document.getElementById('new-message-modal');
+        const openModalBtn = document.getElementById('open-new-message-modal');
+        const closeModalBtn = document.getElementById('close-new-message-modal');
+        const cancelBtn = document.getElementById('cancel-new-message');
+        const messageForm = document.getElementById('new-message-form');
+        const errorMessage = document.getElementById('modal-error-message');
+        const errorText = document.getElementById('modal-error-text');
+          // Open modal
+        openModalBtn.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        });
+        
+        // Welcome screen button
+        const welcomeBtn = document.getElementById('welcome-new-message-btn');
+        if (welcomeBtn) {
+            welcomeBtn.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            });
+        }
+        
+        // Close modal functions
+        function closeModal() {
+            modal.classList.add('hidden');
+            messageForm.reset();
+            errorMessage.classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable scrolling
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        // Handle form submission with AJAX
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const sendBtn = document.getElementById('send-new-message');
+            const spinner = sendBtn.querySelector('.spinner');
+            sendBtn.disabled = true;
+            spinner.style.display = 'inline-block';
+            errorMessage.classList.add('hidden');
+            
+            const formData = new FormData(messageForm);
+            
+            fetch('{% url 'send_message' %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Message sent successfully
+                    closeModal();
+                    
+                    // Redirect to the conversation with the recipient
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    // Show error message
+                    errorText.textContent = data.error || 'An error occurred while sending the message.';
+                    errorMessage.classList.remove('hidden');
+                    sendBtn.disabled = false;
+                    spinner.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorText.textContent = 'An error occurred. Please try again.';
+                errorMessage.classList.remove('hidden');
+                sendBtn.disabled = false;
+                spinner.style.display = 'none';
             });
         });
     });

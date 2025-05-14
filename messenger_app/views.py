@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from .models import Message
 from user_app.models import User
 
@@ -11,10 +12,15 @@ def send_message(request):
         try:
             recipient_username = request.POST.get('receiver').capitalize()
             content = request.POST.get('message')
+            
+            # Check if request is AJAX (from modal)
+            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
             try:
                 recipient = User.objects.get(username=recipient_username)
             except User.DoesNotExist:
+                if is_ajax:
+                    return JsonResponse({'success': False, 'error': 'Recipient not found'})
                 return render(request, 'send.html', {
                     'error': 'Recipient not found'
                 })
@@ -22,16 +28,29 @@ def send_message(request):
             message = Message(sender=request.user, recipient=recipient)
             message.encrypt_content(content)
             message.save()
-
-            return redirect(f"{reverse('inbox')}?sender={recipient_username}")
+            
+            redirect_url = f"{reverse('inbox')}?sender={recipient_username}"
+            
+            if is_ajax:
+                return JsonResponse({
+                    'success': True, 
+                    'redirect_url': redirect_url,
+                    'message': 'Message sent successfully'
+                })
+            return redirect(redirect_url)
         
         except User.DoesNotExist:
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': 'Recipient not found'})
             return render(request, 'send.html', {
                 'error': 'Recipient not found'
             })
         except Exception as e:
+            error_message = f'An error occurred: {str(e)}'
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': error_message})
             return render(request, 'send.html', {
-                'error': f'An error occurred: {str(e)}'
+                'error': error_message
             })
 
     return render(request, 'send.html')

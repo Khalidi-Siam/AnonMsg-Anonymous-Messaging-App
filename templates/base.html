@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Immediately apply dark mode to prevent flash -->
+    <script>
+        // Check for dark mode preference and apply it immediately
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Anonymous Messaging{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>    <script>
+    <script src="https://cdn.tailwindcss.com"></script><script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
@@ -49,8 +57,15 @@
                 }
             }
         }
-    </script>
-    <style>
+    </script>    <style>        /* Prevent FOUC (Flash of Unstyled Content) by setting immediate background and text colors */
+        html.dark {
+            background-color: #0f172a; /* Dark background color */
+            color: #f9fafb; /* Set text color to light in dark mode */
+        }
+        html.dark body {
+            background-color: #0f172a; /* Ensure body background is dark */
+        }
+        
         :root {
             --primary-color: #6366f1;
             --primary-dark: #4f46e5;
@@ -72,16 +87,14 @@
             --error-dark: #dc2626;
             --transition-speed: 300ms;
             --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        body {
+        }        body {
             background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
-            transition: background-color var(--transition-speed) var(--transition-ease), 
+            transition: background var(--transition-speed) var(--transition-ease), 
                         color var(--transition-speed) var(--transition-ease);
         }
         .dark body {
@@ -120,9 +133,26 @@
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
-        }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        }        .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #64748b;
+        }
+
+        /* Dropdown hover effects */
+        #profile-dropdown {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            transform-origin: top right;
+        }
+        
+        #profile-dropdown.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        
+        #profile-dropdown:not(.hidden) {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
         }
 
         .fade-in {
@@ -230,45 +260,78 @@
         </div>
     </footer>
 
-    <script>
-        // Dark mode toggle
+    <script>        // Dark mode toggle
         const toggleButton = document.getElementById('theme-toggle');
         const sunIcon = document.getElementById('sun-icon');
         const moonIcon = document.getElementById('moon-icon');
         const html = document.documentElement;
-
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
+        
+        // Icons are already set via the script in the head
+        // This just ensures the correct icon is showing
+        if (html.classList.contains('dark')) {
             sunIcon.classList.remove('hidden');
             moonIcon.classList.add('hidden');
+        } else {
+            sunIcon.classList.add('hidden');
+            moonIcon.classList.remove('hidden');
         }
 
         toggleButton.addEventListener('click', () => {
+            // Apply transition to prevent jarring change
+            document.body.style.transition = 'background 0.3s ease';
+            
             html.classList.toggle('dark');
             if (html.classList.contains('dark')) {
                 localStorage.setItem('theme', 'dark');
                 sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');            } else {
+                moonIcon.classList.add('hidden');
+            } else {
                 localStorage.setItem('theme', 'light');
                 sunIcon.classList.add('hidden');
                 moonIcon.classList.remove('hidden');
             }
-        });        // Profile dropdown toggle
+            
+            // Remove transition after change to prevent affecting other animations
+            setTimeout(() => {
+                document.body.style.transition = '';
+            }, 300);
+        });        // Profile dropdown hover functionality
         const profileButton = document.getElementById('profile-button');
         const profileDropdown = document.getElementById('profile-dropdown');
-        
-        if (profileButton && profileDropdown) {
+          if (profileButton && profileDropdown) {
+            // Show dropdown on mouseenter for desktop
+            profileButton.addEventListener('mouseenter', () => {
+                profileDropdown.classList.remove('hidden');
+            });
+            
+            // Also support touch devices with click toggle
             profileButton.addEventListener('click', (e) => {
                 e.stopPropagation();
+                // This will primarily help on mobile devices
                 profileDropdown.classList.toggle('hidden');
             });
             
+            // Create a parent container for both button and dropdown for better hover handling
+            const dropdownContainer = profileButton.closest('.relative');
+            if (dropdownContainer) {
+                // Hide dropdown when mouse leaves the entire container
+                dropdownContainer.addEventListener('mouseleave', () => {
+                    profileDropdown.classList.add('hidden');
+                });
+            }
+            
+            // Allow clicking inside dropdown without closing it
+            profileDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+            
+            // Close dropdown when clicking elsewhere on the page
             document.addEventListener('click', (e) => {
                 if (!profileButton.contains(e.target) && !profileDropdown.contains(e.target)) {
                     profileDropdown.classList.add('hidden');
                 }
             });
-        }        // Form submission loading state
+        }// Form submission loading state
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('form').forEach(form => {
                 form.addEventListener('submit', (e) => {
